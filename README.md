@@ -1,4 +1,4 @@
-# NetworkAndSignals
+# Network and Signals
  ECSE 316 - Signal and network Projects
 ### Setup
 Make sure that Python 3.9 or later is installed on your system.
