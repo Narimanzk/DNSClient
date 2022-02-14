@@ -8,16 +8,16 @@ from Packet import Packet
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     
-    parser.add_argument('-t', action='store', dest='timeout', type=int, default=5)
-    parser.add_argument('-r', action='store', dest='max_retries', type=int, default=3)
-    parser.add_argument('-p', action='store', dest='port', type=int, default=53)
-    parser.add_argument('server', action='store')
-    parser.add_argument('name', action='store')
+    parser.add_argument('-t', action='store', dest='timeout', help='Specify timeout for the socket', type=int, default=5)
+    parser.add_argument('-r', action='store', dest='max_retries', help='Specify the maximum number of retries', type=int, default=3)
+    parser.add_argument('-p', action='store', dest='port', help='Specify port for the socket', type=int, default=53)
+    parser.add_argument('server', action='store', help='Specify DNS server IP Address')
+    parser.add_argument('name', action='store', help='Specify the domain that you want to lookup')
     
     
     mex = parser.add_mutually_exclusive_group(required=False)
-    mex.add_argument('-mx', action='store_true', default=False, dest='MX')
-    mex.add_argument('-ns', action='store_true', default=False, dest='NS')
+    mex.add_argument('-mx', action='store_true', default=False, dest='MX', help='Specify MX query type')
+    mex.add_argument('-ns', action='store_true', default=False, dest='NS', help='Specify NS query type')
     
     params = parser.parse_args()
 
@@ -38,6 +38,8 @@ if __name__ == "__main__":
     #Create a socket
     skt = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     skt.settimeout(timeout)
+    skt.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    skt.bind(('', port))
     # create a packet to send
     client_packet = Packet()
     query = client_packet.create(name, query_type)
@@ -79,15 +81,15 @@ if __name__ == "__main__":
 
         if rcode != 0:
             if rcode == 1:
-                print("ERROR\tthe name server cannot interpret the query")
+                print("ERROR\tthe name server was unable to interpret the query")
             elif rcode == 2:
-                print("ERROR\tthe name server cannot resolve the query")
+                print("ERROR\tthe name server was unable to process this query due to a problem with the name server")
             elif rcode == 3:
                 print("NOTFOUND")
             elif rcode == 4:
-                print("ERROR\tthe query is not supported by the server")
+                print("ERROR\tthe name server does not support the requested kind of query")
             elif rcode == 5:
-                print("ERROR\tthe policy is violated. Server request is refused")
+                print("ERROR\tthe name server refuses to perform the requested operation for policy reasons")
             return 
 
         if ra == 0:
