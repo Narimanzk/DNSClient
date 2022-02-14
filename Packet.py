@@ -85,6 +85,7 @@ class Packet():
                 rdata, idx = self.domain(response, idx)
             elif atype == 5: # CNAME
                 rdata, idx = self.domain(response, idx)
+                rdata = self.process_labels(rdata)
             elif atype == 15: #MX
                 preference = struct.unpack_from("!H", response, idx)[0]
                 exchange, idx = self.domain(response, idx + 2)
@@ -105,7 +106,7 @@ class Packet():
         
         while part != 0:
             if part & 0xc0 == 0xc0: 
-                ptr = (struct.unpack_from(">H", response, idx - 1)[0]) & 0x3fff
+                ptr = (struct.unpack_from("!H", response, idx - 1)[0]) & 0x3fff
                 temp = self.domain(response, ptr)[0]
                 
                 question.append(temp)
@@ -120,5 +121,4 @@ class Packet():
             part = struct.unpack_from(">B", response, idx)[0]
             idx += 1
         
-        return '.'.join(question), idx  
-
+        return '.'.join(question), idx

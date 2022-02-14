@@ -38,8 +38,7 @@ if __name__ == "__main__":
     #Create a socket
     skt = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     skt.settimeout(timeout)
-    skt.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    skt.bind(('', port))
+    
     # create a packet to send
     client_packet = Packet()
     query = client_packet.create(name, query_type)
