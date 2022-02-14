@@ -5,6 +5,7 @@ Make sure that Python 3.9 or later is installed on your system.
 
 ### Usage
 Some examples on how to use the program.
+You can use either python3 or python as running command depending on your shell setting.
 
 ```
 python3 DnsClient.py @8.8.8.8 www.google.com
