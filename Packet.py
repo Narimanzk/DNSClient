@@ -86,7 +86,7 @@ class Packet():
             elif atype == 5: # CNAME
                 rdata, idx = self.domain(response, idx)
             elif atype == 15: #MX
-                preference = struct.unpack_from(">H", response, idx)
+                preference = struct.unpack_from("!H", response, idx)[0]
                 exchange, idx = self.domain(response, idx + 2)
                 rdata = {"preference": preference, "exchange": exchange}
                 
